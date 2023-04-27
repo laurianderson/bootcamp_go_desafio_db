@@ -1,9 +1,11 @@
 package handler
 
 import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
 	"github.com/laurianderson/bootcamp_go_desafio_db/internal/customers"
 	"github.com/laurianderson/bootcamp_go_desafio_db/internal/domain"
-	"github.com/gin-gonic/gin"
 )
 
 type Customers struct {
@@ -39,5 +41,18 @@ func (c *Customers) Post() gin.HandlerFunc {
 			return
 		}
 		ctx.JSON(201, gin.H{"data": customer})
+	}
+}
+
+func (c *Customers) LoadJson() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		customers, err := c.s.LoadJson()
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+
+		ctx.JSON(http.StatusOK, gin.H{"data": customers})
+
 	}
 }

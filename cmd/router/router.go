@@ -42,6 +42,7 @@ func (r *router) buildCustomersRoutes() {
 	{
 		c.GET("", handler.GetAll())
 		c.POST("", handler.Post())
+		c.POST("/loadJson", handler.LoadJson())
 	}
 }
 
