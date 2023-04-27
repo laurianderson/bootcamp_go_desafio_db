@@ -5,9 +5,20 @@ import (
 	"github.com/laurianderson/bootcamp_go_desafio_db/internal/domain"
 )
 
+const (
+	QueryGetTotal = `
+		SELECT i.id, SUM(p.price * s.quantity) AS total
+		FROM invoices AS i
+		INNER JOIN sales AS s ON i.id = s.invoice_id
+		INNER JOIN products AS p ON s.product_id = p.id
+		GROUP BY i.id;`
+	QueryUpdateTotal = `UPDATE invoices SET total = ? WHERE id = ?;`
+)
+
 type Repository interface {
 	Create(invoices *domain.Invoices) (int64, error)
 	ReadAll() ([]*domain.Invoices, error)
+	Update() error
 }
 
 type repository struct {
@@ -48,4 +59,32 @@ func (r *repository) ReadAll() ([]*domain.Invoices, error) {
 		invoices = append(invoices, &invoice)
 	}
 	return invoices, nil
+}
+
+func (r *repository) Update() error {
+	// prepare statement
+	rows, err := r.db.Query(QueryGetTotal)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	// iterate over rows and update invoices
+	for rows.Next() {
+		var id int
+		var total float64
+		err = rows.Scan(&id, &total)
+		if err != nil {
+			return err
+		}
+		_, err = r.db.Exec(QueryUpdateTotal, total, id)
+		if err != nil {
+			return err
+		}
+	}
+	if err = rows.Err(); err != nil {
+		return err
+	}
+
+	return nil
 }

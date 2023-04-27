@@ -12,6 +12,8 @@ type Service interface {
 	Create(invoices *domain.Invoices) error
 	ReadAll() ([]*domain.Invoices, error)
 	LoadJson() ([]*domain.Invoices, error)
+	Update() error
+
 }
 
 type service struct {
@@ -61,3 +63,6 @@ func (s *service) LoadJson() (invoices []*domain.Invoices, err error) {
 
 }
 
+func (s *service) Update() error {
+	return s.r.Update()
+}

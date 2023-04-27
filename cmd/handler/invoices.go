@@ -2,7 +2,6 @@ package handler
 
 import (
 	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/laurianderson/bootcamp_go_desafio_db/internal/domain"
 	"github.com/laurianderson/bootcamp_go_desafio_db/internal/invoices"
@@ -56,3 +55,15 @@ func (i *Invoices) LoadJson() gin.HandlerFunc {
 
 	}
 }
+
+func (i *Invoices) Update() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		err := i.s.Update()
+		if err != nil {
+			return
+		}
+		return
+	}
+}
+
+
