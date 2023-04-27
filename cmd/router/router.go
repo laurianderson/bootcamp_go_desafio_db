@@ -55,6 +55,7 @@ func (r *router) buildInvoicesRoutes() {
 	{
 		i.GET("", handler.GetAll())
 		i.POST("", handler.Post())
+		i.POST("/loadJson", handler.LoadJson())
 	}
 }
 
