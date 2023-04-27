@@ -81,5 +81,6 @@ func (r *router) buildSalesRoutes() {
 	{
 		s.GET("", handler.GetAll())
 		s.POST("", handler.Post())
+		s.POST("/loadJson", handler.LoadJson())
 	}
 }
